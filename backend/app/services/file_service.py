@@ -11,6 +11,11 @@ class FileService:
         os.makedirs(output_dir,exist_ok=True)
         
     def save(self, file):
+        """
+        Saves and returns a file path
+        based on what is uploaded
+        
+        """
         filename = f"{uuid.uuid4()}_{file.filename}"
         path = os.path.join(self.upload_dir,filename)
         file.save(path)
