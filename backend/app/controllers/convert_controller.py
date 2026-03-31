@@ -22,7 +22,7 @@ def convert_file():
     conversion_service = ConversionService(OUTPUT_DIR)
     
     try:
-        input_path = file_service.save(file)
+        input_path = file_service.save_file(file)
         output_filename = conversion_service.convert(input_path,target_format)
         
         return jsonify({
@@ -30,7 +30,9 @@ def convert_file():
             "download_url": f"/api/download/{output_filename}"
         })
         
-        
+    except ValueError as ve:
+        return jsonify({"error":str(ve)}), 400
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
