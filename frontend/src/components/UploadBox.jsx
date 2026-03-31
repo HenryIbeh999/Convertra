@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Upload, File } from 'lucide-react';
 
 const UploadBox = ({ onFilesSelected }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const inputRef = useRef(null);
 
   const handleDrag = useCallback((e) => {
     e.preventDefault();
@@ -20,6 +21,8 @@ const UploadBox = ({ onFilesSelected }) => {
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       onFilesSelected(Array.from(e.dataTransfer.files));
+      // Reset so re-dropping the same file still fires events
+      if (inputRef.current) inputRef.current.value = '';
     }
   }, [onFilesSelected]);
 
@@ -27,6 +30,8 @@ const UploadBox = ({ onFilesSelected }) => {
     if (e.target.files && e.target.files.length > 0) {
       onFilesSelected(Array.from(e.target.files));
     }
+    // Always reset so cancelling then re-selecting always fires onChange
+    e.target.value = '';
   };
 
   return (
@@ -49,6 +54,7 @@ const UploadBox = ({ onFilesSelected }) => {
         transform: isDragging ? 'scale(1.02)' : 'scale(1)',
     }}>
       <input 
+        ref={inputRef}
         type="file" 
         multiple 
         onChange={handleSelect}
