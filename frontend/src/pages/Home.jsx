@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import UploadBox from '../components/UploadBox';
 import FileCard from '../components/FileCard';
+import { convertFile } from '../services/api';
 
 const Home = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -10,7 +11,8 @@ const Home = () => {
       file: f,
       id: Math.random().toString(36).substr(2, 9),
       targetFormat: 'pdf',
-      status: null
+      status: null,
+      downloadUrl: null
     }));
     setSelectedFiles([...selectedFiles, ...newFiles]);
   };
@@ -23,9 +25,29 @@ const Home = () => {
     setSelectedFiles(selectedFiles.map(f => f.id === id ? { ...f, targetFormat: format } : f));
   };
 
-  const handleConvert = (id) => {
-    setSelectedFiles(selectedFiles.map(f => f.id === id ? { ...f, status: 'processing' } : f));
-    // Implementation for conversion will go here
+  const handleConvert = async (id) => {
+    const fileToConvert = selectedFiles.find(f => f.id === id);
+    if (!fileToConvert) return;
+
+    setSelectedFiles(prev => prev.map(f => f.id === id ? { ...f, status: 'processing' } : f));
+
+    try {
+      const response = await convertFile(fileToConvert.file, fileToConvert.targetFormat);
+      
+      // The backend returns { message: "success", download_url: "/api/download/..." }
+      // We prefix with the backend port since we're in dev mode
+      const downloadUrl = `http://localhost:5000${response.download_url}`;
+      
+      setSelectedFiles(prev => prev.map(f => f.id === id ? { 
+        ...f, 
+        status: 'done',
+        downloadUrl: downloadUrl
+      } : f));
+    } catch (error) {
+      console.error("Conversion failed:", error);
+      setSelectedFiles(prev => prev.map(f => f.id === id ? { ...f, status: 'error' } : f));
+      alert(error.response?.data?.error || "Conversion failed. Please try again.");
+    }
   };
 
   return (
@@ -72,6 +94,7 @@ const Home = () => {
             file={fileData.file}
             targetFormat={fileData.targetFormat}
             status={fileData.status}
+            downloadUrl={fileData.downloadUrl}
             onRemove={() => handleRemove(fileData.id)}
             onFormatChange={(fmt) => handleFormatChange(fileData.id, fmt)}
             onConvert={() => handleConvert(fileData.id)}

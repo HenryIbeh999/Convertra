@@ -6,28 +6,22 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-export const uploadFile = async (file) => {
+/**
+ * Sends a file and a target format to the backend for conversion.
+ * Returns the download URL for the converted file.
+ */
+export const convertFile = async (file, targetFormat) => {
   const formData = new FormData();
   formData.append('file', file);
-  const response = await api.post('/upload', formData, {
+  formData.append('target_format', targetFormat);
+
+  const response = await api.post('/convert', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-  return response.data;
-};
 
-export const startConversion = async (fileId, targetFormat) => {
-  const response = await api.post('/convert', {
-    file_id: fileId,
-    target_format: targetFormat,
-  });
-  return response.data;
-};
-
-export const checkStatus = async (conversionId) => {
-  const response = await api.get(`/status/${conversionId}`);
-  return response.data;
+  return response.data; // { "message": "success", "download_url": "/api/download/..." }
 };
 
 export default api;

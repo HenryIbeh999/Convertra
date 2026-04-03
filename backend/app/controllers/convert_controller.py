@@ -1,9 +1,11 @@
+import os
 from flask import Blueprint, request, jsonify, send_from_directory
 from app.services.conversion_service import ConversionService
 from app.services.file_service import FileService
 
-UPLOAD_DIR = "uploads"
-OUTPUT_DIR = "outputs"
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 
 
 convert_bp = Blueprint("convert",__name__)
