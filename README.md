@@ -65,4 +65,4 @@ The Vite development server will start, typically running on `http://localhost:5
 - `frontend/`: The React (Vite) frontend containing all user interface and component code.
 - `backend/`: The Flask API, managing file conversions, temp storage, and processing logic.
 - `assets/`: Project documentation and illustration assets.
-- `test_data/` & `test_outputs/`: Data used for the validation and testing of the backend conversion components.
+
