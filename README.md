@@ -1,6 +1,10 @@
 # Convertra
 
-![Convertra Logo](assets/convertra_logo.png)
+<div align="center">
+  <img src="assets/convertra_logo.png" alt="Convertra Logo" 
+  height="200"
+  width="250" />
+</div>
 
 Convertra is a modern and flexible file conversion web application that provides seamless and quick conversions across various formats. Built with a Flask backend and a React (Vite) frontend, it features a sleek design with built-in dark mode support.
 
@@ -10,7 +14,9 @@ Convertra is a modern and flexible file conversion web application that provides
 - **Sleek User Interface**: Playful, modern design that is easy to navigate, with an alternative dark mode theme.
 - **Interactive Uploads**: Intuitive file upload interface handling user selections seamlessly.
 
-![Convertra Workflow](assets/convertra_workflow.png)
+<div align="center">
+  <img src="assets/convertra_workflow.png" alt="Convertra Workflow" width="250" />
+</div>
 
 ## Architecture
 
